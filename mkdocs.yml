@@ -14,6 +14,16 @@ nav:
     - Hardware: documentation/hardware.md
     - Release Notes: documentation/release_notes.md
     - Roadmap: documentation/roadmap.md
+  - Implemntation:
+    - Hardware Design: implementation/hardware_design.md
+    - Software Design: implementation/software_design.md
+    - Testing Strategy: implementation/testing_strategy.md
+    - Technical Challenges: implementation/technical_challenges.md
+    - Tools and Technologies: implementation/tools_and_technologies.md
+  - About:
+    - About the Project: about/about_the_project.md
+    - About the Class: about/about_the_class.md
+    - Contact: about/contact.md
 
 theme:
     name: material
