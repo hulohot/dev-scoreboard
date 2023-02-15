@@ -1,1 +1,3 @@
 # Project Team
+
+Ethan Brugger
