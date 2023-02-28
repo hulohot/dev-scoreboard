@@ -37,7 +37,7 @@ async def payload(payload: dict):
 
     if check_payload(payload):
         print("Dispense event detected!")
-        return await dispense()
+        return dispense()
     else:
         print("Unknown event detected!")
         return {"message": "Unknown event!"}
@@ -54,10 +54,31 @@ def check_payload(payload: dict) -> bool:
     - Pull Request Opened
     - Pull Request Closed
     """
-    if payload["event"] == "dispense":
-        return True
-    else:
-        return False
+    action = payload.get("action")
+    pull_request = payload.get("pull_request")
+    issue = payload.get("issue")
+    pusher = payload.get("pusher")
+
+    # Check if a new issue or pull request was created
+    if action and action == "opened":
+        if pull_request or issue:
+            return True
+
+    # Check if an issue was closed, or a pull request was merged
+    if action and action == "closed":
+        if issue:
+            return True
+        merged_at = pull_request.get("merged_at")
+        if merged_at:
+            return True
+
+    # Check if a push was made by the user 'Hulohot' to a branch
+    if pusher:
+        name = pusher.get("name")
+        if name and name == "Hulohot":
+            return True
+
+    return False
 
 
 @app.get("/heartbeat")
@@ -144,7 +165,7 @@ async def led_blink():
         return {"message": "Connection error!"}
 
 
-async def dispense():
+def dispense():
     """
     This is a dispense function that is used to dispense a treat.
     It calls the ESP8266 to dispense a treat.
