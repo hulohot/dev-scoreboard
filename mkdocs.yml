@@ -4,50 +4,61 @@ repo_name: hulohot/dev-scoreboard
 
 nav:
   - Home:
-    - Introduction: index.md
-    - Project Overview: home/project_overview.md
-    - Project Team: home/project_team.md
-    - Project Timeline: home/project_timeline.md
-    - Acknowledgements: home/acknowledgements.md
+      - Introduction: index.md
+      - Project Overview: home/project_overview.md
+      - Project Team: home/project_team.md
+      - Project Timeline: home/project_timeline.md
+      - Acknowledgements: home/acknowledgements.md
   - Documentation:
-    - Installing: documentation/installing.md
-    - Hardware: documentation/hardware.md
-    - Release Notes: documentation/release_notes.md
-    - Roadmap: documentation/roadmap.md
+      - Installing: documentation/installing.md
+      - Hardware: documentation/hardware.md
+      - Release Notes: documentation/release_notes.md
+      - Roadmap: documentation/roadmap.md
   - Implemntation:
-    - Hardware Design: implementation/hardware_design.md
-    - Software Design: implementation/software_design.md
-    - Testing Strategy: implementation/testing_strategy.md
-    - Technical Challenges: implementation/technical_challenges.md
-    - Tools and Technologies: implementation/tools_and_technologies.md
+      - Hardware Design: implementation/hardware_design.md
+      - Software Design: implementation/software_design.md
+      - Testing Strategy: implementation/testing_strategy.md
+      - Technical Challenges: implementation/technical_challenges.md
+      - Tools and Technologies: implementation/tools_and_technologies.md
+      - API: http://localhost:8000/docs
   - About:
-    - About the Project: about/about_the_project.md
-    - About the Class: about/about_the_class.md
-    - Contact: about/contact.md
+      - About the Project: about/about_the_project.md
+      - About the Class: about/about_the_class.md
+      - Contact: about/contact.md
 
 theme:
-    name: material
-    locale: en
-    features:
-      - navigation.tabs
+  name: material
+  locale: en
+  features:
+    - navigation.tabs
 
-    palette:
-      # Palette toggle for light mode
-      - media: "(prefers-color-scheme: light)"
-        scheme: default
-        toggle:
-          icon: material/brightness-7
-          name: Switch to dark mode
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
 
-      # Palette toggle for dark mode
-      - media: "(prefers-color-scheme: dark)"
-        scheme: slate
-        toggle:
-          icon: material/brightness-4
-          name: Switch to light mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 
 markdown_extensions:
   - attr_list
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
+
+extra:
+  openapi_url: http://localhost:8000/openapi.json
+  swagger_ui_prefix: "swagger-ui"
+
+plugins:
+  - search
+  - swagger_ui:
+      openapi_url: $extra.openapi_url
+      swagger_ui_prefix: $extra.swagger_ui_prefix
