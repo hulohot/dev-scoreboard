@@ -21,7 +21,8 @@ async def ping():
     print("Pong!")
     return {"message": "pong"}
 
-@app.post('/payload')
+
+@app.post("/payload")
 async def payload(payload: dict):
     """
     This is a payload endpoint that is used to receive the payload from the
@@ -32,7 +33,32 @@ async def payload(payload: dict):
     print("Payload received!")
     print(payload)
 
-    return {"message": "Payload received!"}
+    # Check if the payload is for the "dispense" event
+
+    if check_payload(payload):
+        print("Dispense event detected!")
+        return await dispense()
+    else:
+        print("Unknown event detected!")
+        return {"message": "Unknown event!"}
+
+
+def check_payload(payload: dict) -> bool:
+    """
+    This is a check_payload function that is used to check if the payload
+    is for the "dispense" event.
+    The following events are supported:
+    - Issue Created
+    - Issue Closed
+    - Push
+    - Pull Request Opened
+    - Pull Request Closed
+    """
+    if payload["event"] == "dispense":
+        return True
+    else:
+        return False
+
 
 @app.get("/heartbeat")
 async def heartbeat():
@@ -53,6 +79,7 @@ async def heartbeat():
         print(e)
         return {"message": "Connection error!"}
 
+
 @app.get("/led_on")
 async def led_on():
     """
@@ -71,6 +98,7 @@ async def led_on():
         print("Connection error!")
         print(e)
         return {"message": "Connection error!"}
+
 
 @app.get("/led_off")
 async def led_off():
@@ -115,10 +143,10 @@ async def led_blink():
         print(e)
         return {"message": "Connection error!"}
 
-@app.get("/dispense")
+
 async def dispense():
     """
-    This is a dispense endpoint that is used to dispense a treat.
+    This is a dispense function that is used to dispense a treat.
     It calls the ESP8266 to dispense a treat.
     """
     print("Dispensing treat...")
