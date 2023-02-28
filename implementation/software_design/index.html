@@ -559,9 +559,47 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Software Design
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Software Design
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#webhooks" class="md-nav__link">
+    Webhooks
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-webhooks" class="md-nav__link">
+    GitHub Webhooks
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -713,6 +751,28 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#webhooks" class="md-nav__link">
+    Webhooks
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-webhooks" class="md-nav__link">
+    GitHub Webhooks
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -730,6 +790,25 @@
 
 
 <h1 id="software-design">Software Design</h1>
+<h2 id="webhooks">Webhooks</h2>
+<p>Webhooks are a way for an application to subscribe to events that happen in the
+application. When an event happens, the application will send a POST request to
+the webhook's URL. The webhook's URL is configured by the application when it
+subscribes to the event.</p>
+<p>In this case, the application is the <a href="https://github.com">GitHub</a> application
+and the events are the creation of a new issue or pull request. The webhook's
+URL is the URL of the application's server.</p>
+<h2 id="github-webhooks">GitHub Webhooks</h2>
+<p>This diagram shows the flow of a webhook from GitHub to the
+application's server.</p>
+<p><img alt="GitHub Webhooks" src="images/github_webhooks.png" /></p>
+<p>The following GitHub events trigger a webhook:</p>
+<pre><code>- Issue Created
+- Issue Closed
+- Push
+- Pull Request Opened
+- Pull Request Closed
+</code></pre>
 
 
 
