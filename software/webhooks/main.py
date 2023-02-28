@@ -21,6 +21,18 @@ async def ping():
     print("Pong!")
     return {"message": "pong"}
 
+@app.post('/payload')
+async def payload(payload: dict):
+    """
+    This is a payload endpoint that is used to receive the payload from the
+    webhook service. It is called by the webhook service when a webhook is
+    triggered.
+    """
+
+    print("Payload received!")
+    print(payload)
+
+    return {"message": "Payload received!"}
 
 @app.get("/heartbeat")
 async def heartbeat():
