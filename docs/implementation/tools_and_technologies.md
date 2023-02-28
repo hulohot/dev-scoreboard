@@ -18,7 +18,3 @@ I used [Git](https://git-scm.com/) as my version control system. I chose this ve
 ## Continuous Integration
 
 I used [GitHub Actions](https://docs.github.com/en/actions) as my continuous integration system. I chose this continuous integration system because it is free and open source, and it is the most popular continuous integration system.
-
-## Documentation
-
-I used [MkDocs](https://www.mkdocs.org/) as my documentation generator. I chose this documentation generator because it is free and open source, and it is the most popular documentation generator. This project's documentation is hosted on [GitHub Pages](https://pages.github.com/) and can be found [here](https://hulohot.github.io/dev-scoreboard/).
