@@ -18,9 +18,15 @@ Servo candyServo;
 
 // Define GPIO pins
 #define LED_PIN 4
+#define SERVO_PIN D3
+
+/*************************/
+/******* ENDPOINTS *******/
+/*************************/
 
 /**
  * @brief Handle the dispense request
+ *
  * @arg duration: The duration to dispense for
  *
  * This function is called when the user makes a request to the /dispense endpoint.
@@ -67,36 +73,96 @@ void handleDispense()
   Serial.println(" seconds");
 
   // Move the servo to 45 degrees
-  candyServo.write(45);
+  serverAngle(45);
 
   // Wait for the specified number of seconds
-  delay(duration * 1000);
+  int delayTime = duration * 1000;
+  delay(delayTime);
 
   // Move the servo back to 0 degrees
-  candyServo.write(0);
+  serverAngle(0);
 
   server.send(200, "text/plain", "Dispense complete");
 }
 
 /**
- * @brief Turn the LED on
- * 
+ * @brief Handle the set angle request
+ *
+ * @param angle
+ *
+ * This function is called when the user makes a request to the /set_angle endpoint.
+ *
+ * The request should contain a "angle" parameter, which specifies the angle to move the servo to.
+ *
  */
-void ledOn()
+void handleSetAngle()
 {
-  digitalWrite(D4, HIGH);
+  String angleStr = server.arg("angle");
+  if (angleStr == "")
+  {
+    server.send(400, "text/plain", "Missing angle parameter");
+    return;
+  }
+
+  int angle = angleStr.toInt();
+
+  // Check if the duration is valid
+  if (angle <= 0)
+  {
+    server.send(400, "text/plain", "Invalid angle");
+    return;
+  }
+  if (angle < 0 || angle > 180)
+  {
+    server.send(400, "text/plain", "Angle must be between 0 and 180");
+    return;
+  }
+
+  Serial.print("Moving servo to ");
+  Serial.print(angle);
+  Serial.println(" degrees");
+
+  serverAngle(angle);
+  server.send(200, "text/plain", "Servo moved");
 }
 
 /**
- * @brief Turn the LED off
- * 
+ * @brief Handle the LED on request
+ *
+ * This function is called when the user makes a request to the /led_on endpoint.
+ *
+ * The function will respond with a 200 OK response, and the text "LED on".
+ *
  */
-void ledOff()
+void handleLedOn()
 {
-  digitalWrite(D4, LOW);
+  ledOn();
+  server.send(200, "text/plain", "LED on");
 }
 
-void handleBlink()
+/**
+ * @brief Handle the LED off request
+ *
+ * This function is called when the user makes a request to the /led_off endpoint.
+ *
+ * The function will respond with a 200 OK response, and the text "LED off".
+ *
+ */
+void handleLedOff()
+{
+  ledOff();
+  server.send(200, "text/plain", "LED off");
+}
+
+/**
+ * @brief Handle the blink request
+ *
+ * This function is called when the user makes a request to the /blink endpoint.
+ *
+ * The function will respond with a 200 OK response, and the text "Blink complete".
+ *
+ */
+void handleLedBlink()
 {
   for (int i = 0; i < 10; i++)
   {
@@ -105,13 +171,59 @@ void handleBlink()
     ledOff();
     delay(100);
   }
+
+  server.send(200, "text/plain", "Blink complete");
 }
+
+/*************************/
+/******* HARDWARE ********/
+/*************************/
+
+/**
+ * @brief Handle the server angle request
+ *
+ * @param angle
+ */
+void serverAngle(int angle)
+{
+  candyServo.write(angle);
+}
+
+/**
+ * @brief Turn the LED on
+ *
+ */
+void ledOn()
+{
+  digitalWrite(D4, HIGH);
+}
+
+/**
+ * @brief Turn the LED off
+ *
+ */
+void ledOff()
+{
+  digitalWrite(D4, LOW);
+}
+
+/*************************/
+/******* MAIN LOOP *******/
+/*************************/
 
 void setup()
 {
+  // Set up Serial Monitor
   Serial.begin(115200);
-  candyServo.attach(D3);
+
+  // Setup Servo
+  candyServo.attach(SERVO_PIN);
   candyServo.write(0);
+
+  // Setup LED
+  pinMode(LED_PIN, OUTPUT);
+  ledOff();
+  
   delay(1000);
 
   // Connect to Wi-Fi network
@@ -127,8 +239,16 @@ void setup()
   Serial.println(WiFi.localIP());
 
   // Set up the web server
+  server.on("/", []()
+            { server.send(200, "text/plain", "Hello from the ESP8266!"); });
+  server.on("/heartbeat", []()
+            { server.send(200, "text/plain", "OK"); });
   server.on("/dispense", handleDispense);
-  server.on("/blink", handleBlink);
+  server.on("/led_blink", handleLedBlink);
+  server.on("/led_on", handleLedOn);
+  server.on("/led_off", handleLedOff);
+  server.on("/set_angle", handleSetAngle);
+
   server.begin();
   Serial.println("Web server started");
 }
