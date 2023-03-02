@@ -2,6 +2,10 @@ import pymongo
 from dataclasses import dataclass, field, asdict
 from typing import List, Dict, Any
 import random
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 @dataclass
@@ -13,7 +17,9 @@ class Planet:
     surfaceTemperatureC: Dict[str, Any] = field(default_factory=dict)
 
 
-connection_string = "mongodb+srv://bruggerem:test12345@cluster0.aserqws.mongodb.net/?retryWrites=true&w=majority"
+MONGODB_PASS = os.getenv("MONGODB_PASS")
+
+connection_string = f"mongodb+srv://bruggerem:{MONGODB_PASS}@cluster0.aserqws.mongodb.net/?retryWrites=true&w=majority"
 
 # Create a MongoDB client
 client = pymongo.MongoClient(connection_string)
