@@ -1,7 +1,22 @@
 from fastapi import FastAPI
+from pymongo import MongoClient
+from fastapi.responses import JSONResponse
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
+
+MONGODB_PASS = os.getenv("MONGODB_PASS")
+connection_string = f"mongodb+srv://bruggerem:{MONGODB_PASS}@cluster0.aserqws.mongodb.net/?retryWrites=true&w=majority"
+
+# Set up a connection to your MongoDB database
+client = MongoClient(connection_string)
+db = client["mydatabase"]
+collection = db["mycollection"]
+
 
 ESP_IP = "192.168.4.171"  # IP address of the ESP8266
 ESP_PORT = "80"  # Port of the ESP8266
@@ -186,3 +201,18 @@ def dispense():
         print("Connection error!")
         print(e)
         return {"message": "Connection error!"}
+
+
+@app.get("/items/{item_id}")
+async def read_item(item_id: str):
+    item = collection.find_one({"_id": item_id})
+    return item
+
+
+@app.get("/api/data")
+async def get_data():
+    data = []
+    for doc in collection.find():
+        doc.pop("_id")  # remove the MongoDB ID from the response
+        data.append(doc)
+    return JSONResponse(content=data)
