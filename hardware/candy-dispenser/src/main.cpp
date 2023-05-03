@@ -4,6 +4,8 @@
 #include <WiFiClient.h>
 #include <Servo.h>
 
+#define SERVO_PIN D0
+
 // Replace with your network credentials
 const char* ssid = "BrickHouse";
 const char* password = "Olivia1Ethan2Jacob3";
@@ -25,23 +27,26 @@ void handleDispense() {
   Serial.println(" seconds");
 
 
-  // Move the servo to 45 degrees
-  myservo.write(45);
+  // Move the servo to 180 degrees
+  myservo.write(90);
   digitalWrite(LED_BUILTIN, HIGH);
 
   // Wait for the specified number of seconds
-  delay(duration * 1000);
+  delay(duration * 500);
 
   // Move the servo back to 0 degrees
   myservo.write(0);
   digitalWrite(LED_BUILTIN, LOW);
+
+  // Stop the servo from moving
+  myservo.detach();
 
   server.send(200, "text/plain", "Dispense complete");
 }
 
 void setup() {
   Serial.begin(115200);
-  myservo.attach(D3);
+  myservo.attach(D0);
   myservo.write(0);
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
