@@ -74,6 +74,8 @@ def check_payload(payload: dict) -> bool:
     issue = payload.get("issue")
     pusher = payload.get("pusher")
 
+    return True
+
     # Check if a new issue or pull request was created
     if action and action == "opened":
         if pull_request or issue:
